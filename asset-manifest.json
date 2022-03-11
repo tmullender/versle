@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/versle/static/css/main.93e717fb.css",
+    "main.js": "/versle/static/js/main.7b85c292.js",
+    "index.html": "/versle/index.html",
+    "main.93e717fb.css.map": "/versle/static/css/main.93e717fb.css.map",
+    "main.7b85c292.js.map": "/versle/static/js/main.7b85c292.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.93e717fb.css",
+    "static/js/main.7b85c292.js"
+  ]
+}
