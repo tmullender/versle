@@ -13,12 +13,18 @@ function Word(props) {
     function drag(event) {
         event.dataTransfer.setData("index", props.word.index);
     }
+    function onClick() {
+        if (props.word.available) {
+            props.onClick(props.word.index)
+        }
+    }
     const available = props.word.available ? "available": ""
     return (
         <div
             className={`Word ${available}`}
             draggable={props.word.available}
             onDragStart={drag}
+            onClick={onClick}
         >
             <span>{props.word.value}</span>
         </div>
@@ -27,11 +33,7 @@ function Word(props) {
 
 function WordList(props) {
     const list = [...props.words].sort(sortValues).map(word =>
-        <Word
-            key={word.index}
-            word={word}
-            draggable={true}
-        />
+        <Word key={word.index} word={word} draggable={true} onClick={props.wordSelected}/>
     )
     return (
         <div className={"WordList"}>
@@ -44,7 +46,7 @@ function Space(props) {
     function drop(event) {
         event.preventDefault();
         if (!props.word.value) {
-            props.onUpdate(props.word.position, event.dataTransfer.getData("index"));
+            props.onUpdate(props.word.position, parseInt(event.dataTransfer.getData("index")));
         }
     }
     const success = props.complete ? props.word.correct ? "correct" : "incorrect" : ""
@@ -57,7 +59,7 @@ function Space(props) {
 
 function Solution(props) {
     let spaces = props.spaces.map(space =>
-        <Space key={space.position} onUpdate={props.onUpdate} word={space} complete={props.complete}/>
+        <Space complete={props.complete} key={space.position} onUpdate={props.onUpdate} word={space} />
     )
     return (
         <div className={"Solution"}>
@@ -70,6 +72,7 @@ function App() {
     const [ words, setWords ] = useState({ available: [], used: [] });
     const [ location, setLocation ] = useState("");
     const [ history, setHistory] = useState([]);
+    const [ nextIndex, setNextIndex ] = useState(0);
 
     function initialise(words, location) {
         const used = words.map((value, position) => {
@@ -80,6 +83,8 @@ function App() {
         });
         setWords({available, used, complete: false});
         setLocation(location);
+        setNextIndex(0);
+        setHistory([]);
     }
 
     useEffect(() => {
@@ -111,7 +116,7 @@ function App() {
             return space;
         })
         const available = words.available.map(word => {
-            if (`${word.index}` === source) {
+            if (word.index === source) {
                 word.available = false;
             }
             return word;
@@ -123,8 +128,21 @@ function App() {
                 used: available.map((word, position) => { return {position} }),
                 complete: false
             })
+            return true;
+        }
+        setWords({available, used, complete})
+        return false;
+    }
+
+    function wordSelected(index) {
+        let current = nextIndex;
+        while (words.used[current].value) {
+            current++
+        }
+        if (onUpdate(current, index)) {
+            setNextIndex(0)
         } else {
-            setWords({available, used, complete})
+            setNextIndex(++current);
         }
     }
 
@@ -141,7 +159,7 @@ function App() {
                 spaces={words.used}
             />
             <span className={"location"}>{success ? location : ""}</span>
-            <WordList words={words.available} />
+            <WordList words={words.available} wordSelected={wordSelected}/>
         </div>
     );
 }

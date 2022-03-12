@@ -42,8 +42,13 @@
 }
 
 .available {
-  cursor: grab;
   color: black;
+}
+
+@media (pointer:fine) {
+  .available {
+    cursor: grab;
+  }
 }
 
 .Space {
