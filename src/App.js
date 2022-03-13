@@ -51,7 +51,7 @@ function Space(props) {
     }
     const success = props.complete ? props.word.correct ? "correct" : "incorrect" : ""
     return (
-        <div className={`Space ${success}`} onDrop={drop} onDragOver={(e) => e.preventDefault()}>
+        <div className={`Space ${success}`} onClick={props.onClick} onDrop={drop} onDragOver={(e) => e.preventDefault()}>
             <span>{props.word.value}</span>
         </div>
     )
@@ -59,7 +59,13 @@ function Space(props) {
 
 function Solution(props) {
     let spaces = props.spaces.map(space =>
-        <Space complete={props.complete} key={space.position} onUpdate={props.onUpdate} word={space} />
+        <Space
+            complete={props.complete}
+            key={space.position}
+            onClick={() => !props.complete && props.spaceClicked(space)}
+            onUpdate={props.onUpdate}
+            word={space}
+        />
     )
     return (
         <div className={"Solution"}>
@@ -146,6 +152,27 @@ function App() {
         }
     }
 
+    function spaceClicked(space) {
+        if (space.value) {
+            const used = words.used.map((word) => {
+                if (word.position === space.position) {
+                    return {position: space.position}
+                }
+                return word;
+            })
+            const available = words.available.map((word) => {
+                if (word.index === space.index) {
+                    return {...word, available: true}
+                }
+                return word;
+            })
+            setWords({...words, available, used})
+            if (nextIndex > space.position) {
+                setNextIndex(space.position)
+            }
+        }
+    }
+
     const success = words.used.every(word => word.correct)
     return (
         <div className="App">
@@ -155,6 +182,7 @@ function App() {
             <Solution
                 key={history.length}
                 complete={words.complete}
+                spaceClicked={spaceClicked}
                 onUpdate={onUpdate}
                 spaces={words.used}
             />
