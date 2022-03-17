@@ -94,7 +94,7 @@ function App() {
     }
 
     useEffect(() => {
-        fetch("https://labs.bible.org/api/?passage=random&type=json")
+        fetch("https://labs.bible.org/api/?passage=random&type=json&formatting=plain")
             .then(response => response.json())
             .then(json => {
                 const verse = json[0]
