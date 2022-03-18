@@ -10,13 +10,17 @@
 }
 
 .history {
-  padding-bottom: 1.5em;
+  padding-bottom: 1.6em;
 }
 
 .Solution {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+}
+
+.history .Solution {
+  padding-bottom: 0.5em;
 }
 
 .location {
