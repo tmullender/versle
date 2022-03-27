@@ -10,7 +10,7 @@ beforeEach(() => {
 })
 
 test('renders the words', async () => {
-  await render(<Game />);
+  await render(<Game settings={{randomVerse:false}}/>);
   await waitFor(() => {
       expect(screen.getByText(/A/)).toBeInTheDocument();
       expect(screen.getByText(/bible/)).toBeInTheDocument();

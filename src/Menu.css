@@ -1,4 +1,24 @@
 .Menu {
-    width: 100vw;
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: 0 auto;
     text-align: center;
+    width: 90vw;
+}
+
+.menuIcon {
+    font-size: 2.4em;
+    padding: 0.1em;
+}
+
+.title {
+    flex-grow: 100;
+    padding-left: 1.2em;
+}
+
+.setting {
+    display: flex;
+    justify-content: space-between;
 }

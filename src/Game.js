@@ -76,11 +76,13 @@ function Solution(props) {
     )
 }
 
-function Game() {
+function Game(props) {
     const [ words, setWords ] = useState({ available: [], used: [] });
     const [ location, setLocation ] = useState("");
     const [ history, setHistory] = useState([]);
     const [ nextIndex, setNextIndex ] = useState(0);
+
+    const passage = props.settings.randomVerse ? "random" : "votd";
 
     function initialise(words, location) {
         const used = words.map((value, position) => {
@@ -96,7 +98,7 @@ function Game() {
     }
 
     useEffect(() => {
-        fetch("https://labs.bible.org/api/?passage=random&type=json&formatting=plain")
+        fetch(`https://labs.bible.org/api/?passage=${passage}&type=json&formatting=plain`)
             .then(response => response.json())
             .then(json => {
                 const verse = json[0]
