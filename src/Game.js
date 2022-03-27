@@ -99,11 +99,11 @@ function Game() {
             .then(json => {
                 const verse = json[0]
                 const words = verse.text.split(" ").filter(word => word.length);
-                initialise(words, `${verse.bookname} ${verse.chapter}v${verse.verse}`);
+                initialise(words, verse);
             })
             .catch(err => {
                 console.log(err);
-                initialise(["There", "was", "a", "problem", "selecting", "a", "verse"], "Well Done");
+                initialise(["There", "was", "a", "problem", "selecting", "a", "verse"], {});
             });
     }, []);
 
@@ -173,7 +173,17 @@ function Game() {
         }
     }
 
-    const success = words.used.every(word => word.correct)
+    function createLocation() {
+        const success = words.used.every(word => word.correct)
+        if (success && location.bookname) {
+            const content = `${location.bookname} ${location.chapter}v${location.verse}`;
+            const key = `${location.bookname.slice(0,3).toUpperCase()}.${location.chapter}.NET`;
+            return <a className={"location"} href={`https://bible.com/en-GB/bible/107/${key}`}>{content}</a>
+        } else {
+            return <div className={"location"}/>
+        }
+    }
+
     return (
         <div className="Game">
             <div className={"history"} >
@@ -186,7 +196,7 @@ function Game() {
                 onUpdate={onUpdate}
                 spaces={words.used}
             />
-            <span className={"location"}>{success ? location : ""}</span>
+            {createLocation()}
             <WordList words={words.available} wordSelected={wordSelected}/>
         </div>
     );

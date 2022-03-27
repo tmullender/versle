@@ -24,10 +24,12 @@
 }
 
 .location {
-  height: 3em;
-  display: flex;
   align-items: center;
+  color: gray;
+  display: flex;
   font-size: x-large;
+  height: 3em;
+  text-decoration: none;
 }
 
 .Word {
