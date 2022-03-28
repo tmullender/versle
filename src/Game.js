@@ -173,11 +173,21 @@ function Game() {
         }
     }
 
+    function getBookKey() {
+        if (location.bookname === "Philippians") {
+            return "PHP";
+        }
+        if (location.bookname === "Judges") {
+            return "JDG";
+        }
+        return location.bookname.slice(0, 3).toUpperCase();
+    }
+
     function createLocation() {
         const success = words.used.every(word => word.correct)
         if (success && location.bookname) {
             const content = `${location.bookname} ${location.chapter}v${location.verse}`;
-            const key = `${location.bookname.slice(0,3).toUpperCase()}.${location.chapter}.NET`;
+            const key = `${(getBookKey())}.${location.chapter}.NET`;
             return <a className={"location"} href={`https://bible.com/en-GB/bible/107/${key}`}>{content}</a>
         } else {
             return <div className={"location"}/>
