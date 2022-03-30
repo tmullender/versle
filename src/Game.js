@@ -1,5 +1,7 @@
 import {useEffect, useState} from 'react';
 import './Game.css';
+import BOOK_KEYS from './bookKeys.json'
+
 
 function sortValues(a, b) {
     const x = a.value.toLowerCase();
@@ -174,13 +176,8 @@ function Game() {
     }
 
     function getBookKey() {
-        if (location.bookname === "Philippians") {
-            return "PHP";
-        }
-        if (location.bookname === "Judges") {
-            return "JDG";
-        }
-        return location.bookname.slice(0, 3).toUpperCase();
+        const key = BOOK_KEYS[location.bookname];
+        return key || location.bookname.slice(0, 3).toUpperCase();
     }
 
     function createLocation() {
