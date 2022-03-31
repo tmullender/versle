@@ -179,7 +179,7 @@ function Game(props) {
 
     function getBookKey() {
         const key = BOOK_KEYS[location.bookname];
-        return key || location.bookname.slice(0, 3).toUpperCase();
+        return key || location.bookname.replaceAll(" ", "").slice(0, 3).toUpperCase();
     }
 
     function createLocation() {
