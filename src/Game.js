@@ -1,80 +1,9 @@
 import {useEffect, useState} from 'react';
 import './Game.css';
 import BOOK_KEYS from './bookKeys.json'
+import {WordList} from "./WordList";
+import {Solution} from "./Solution";
 
-
-function sortValues(a, b) {
-    const x = a.value.toLowerCase();
-    const y = b.value.toLowerCase();
-    if (x < y) {return -1;}
-    if (x > y) {return 1;}
-    return 0;
-}
-
-function Word(props) {
-    function drag(event) {
-        event.dataTransfer.setData("index", props.word.index);
-    }
-    function onClick() {
-        if (props.word.available) {
-            props.onClick(props.word.index)
-        }
-    }
-    const available = props.word.available ? "available": ""
-    return (
-        <div
-            className={`Word ${available}`}
-            draggable={props.word.available}
-            onDragStart={drag}
-            onClick={onClick}
-        >
-            <span>{props.word.value}</span>
-        </div>
-    )
-}
-
-function WordList(props) {
-    const list = [...props.words].sort(sortValues).map(word =>
-        <Word key={word.index} word={word} draggable={true} onClick={props.wordSelected}/>
-    )
-    return (
-        <div className={"WordList"}>
-            {list}
-        </div>
-    )
-}
-
-function Space(props) {
-    function drop(event) {
-        event.preventDefault();
-        if (!props.word.value) {
-            props.onUpdate(props.word.position, parseInt(event.dataTransfer.getData("index")));
-        }
-    }
-    const success = props.complete ? props.word.correct ? "correct" : "incorrect" : ""
-    return (
-        <div className={`Space ${success}`} onClick={props.onClick} onDrop={drop} onDragOver={(e) => e.preventDefault()}>
-            <span>{props.word.value}</span>
-        </div>
-    )
-}
-
-function Solution(props) {
-    let spaces = props.spaces.map(space =>
-        <Space
-            complete={props.complete}
-            key={space.position}
-            onClick={() => !props.complete && props.spaceClicked(space)}
-            onUpdate={props.onUpdate}
-            word={space}
-        />
-    )
-    return (
-        <div className={"Solution"}>
-            {spaces}
-        </div>
-    )
-}
 
 function Game(props) {
     const [ words, setWords ] = useState({ available: [], used: [] });
@@ -84,20 +13,54 @@ function Game(props) {
 
     const passage = props.settings.randomVerse ? "random" : "votd";
 
-    function initialise(words, location) {
-        const used = words.map((value, position) => {
-            return {position}
+    function loadGame(game, available) {
+        const savedHistory = game.history.map(item => {
+            return {
+                used: item.map((savedIndex, index) => {
+                    return { ...available[savedIndex], position: index, correct: available[savedIndex].value === available[index].value }
+                })
+            }
         });
+        if (game.complete) {
+            const solution = savedHistory.splice(-1)
+            available.forEach(word => word.available = false)
+            setWords({ available, used:solution[0].used, complete: true})
+        }
+        setHistory(savedHistory);
+    }
+
+    function loadSavedGame() {
+        const saved = localStorage.getItem("game");
+        if (saved) {
+            return JSON.parse(saved);
+        }
+        return { history: [] };
+    }
+
+    function getGameKey(location) {
+        return `${(getBookKey(location))}${location.chapter}V${location.verse}`;
+    }
+
+    function initialise(words, location) {
+        const game = loadSavedGame()
+        const key = getGameKey(location);
         const available = words.map((value, index) => {
             return {value, index, available: true}
+        });
+        const used = words.map((value, position) => {
+            return {position}
         });
         setWords({available, used, complete: false});
         setLocation(location);
         setNextIndex(0);
-        setHistory([]);
+        if (game.key === key) {
+            loadGame(game, available)
+        } else {
+            setHistory([]);
+        }
     }
 
-    useEffect(() => {
+    function fetchVerse() {
         fetch(`https://labs.bible.org/api/?passage=${passage}&type=json&formatting=plain`)
             .then(response => response.json())
             .then(json => {
@@ -107,9 +70,16 @@ function Game(props) {
             })
             .catch(err => {
                 console.log(err);
-                initialise(["There", "was", "a", "problem", "selecting", "a", "verse"], {});
+                initialise(["There", "was", "a", "problem", "selecting", "a", "verse"], { bookname: "ABC" });
             });
-    }, []);
+    }
+
+    useEffect(fetchVerse, []);
+
+    function saveHistory(updated, complete) {
+        const saved = updated.map(item => item.used.map(word => word.index))
+        localStorage.setItem("game", JSON.stringify({key: getGameKey(location), history: saved, complete}))
+    }
 
     function onUpdate(target, source) {
         let complete = true;
@@ -131,14 +101,18 @@ function Game(props) {
             }
             return word;
         })
+        const updated = [...history, {available, used, complete}];
         if (complete && used.some(word => !word.correct)) {
-            setHistory([...history, {available, used, complete}])
+            saveHistory(updated, false)
+            setHistory(updated)
             setWords({
                 available: available.map(word => {word.available = true; return word}),
                 used: available.map((word, position) => { return {position} }),
                 complete: false
             })
             return true;
+        } else if (complete) {
+            saveHistory(updated, true)
         }
         setWords({available, used, complete})
         return false;
@@ -177,7 +151,7 @@ function Game(props) {
         }
     }
 
-    function getBookKey() {
+    function getBookKey(location) {
         const key = BOOK_KEYS[location.bookname];
         return key || location.bookname.replaceAll(" ", "").slice(0, 3).toUpperCase();
     }
@@ -186,7 +160,7 @@ function Game(props) {
         const success = words.used.every(word => word.correct)
         if (success && location.bookname) {
             const content = `${location.bookname} ${location.chapter}v${location.verse}`;
-            const key = `${(getBookKey())}.${location.chapter}.NET`;
+            const key = `${(getBookKey(location))}.${location.chapter}.NET`;
             return <a className={"location"} href={`https://bible.com/en-GB/bible/107/${key}`}>{content}</a>
         } else {
             return <div className={"location"}/>
