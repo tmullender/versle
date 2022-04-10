@@ -1,4 +1,4 @@
-import {act, render, screen, waitFor, within} from '@testing-library/react';
+import {act, cleanup, fireEvent, render, screen, waitFor, within} from '@testing-library/react';
 import Game from './Game';
 
 beforeEach(() => {
@@ -13,7 +13,7 @@ afterEach(() => {
     localStorage.clear();
 })
 
-test('renders the words', async () => {
+test('the words of the verse are rendered', async () => {
     await act(async () => {
         render(<Game settings={{randomVerse:false}}/>);
     });
@@ -39,6 +39,28 @@ test('words are available until clicked', async () => {
         element.click();
         expect(!element.classList.contains("available"))
     })
+})
+
+test('words are available until dragged', async () => {
+    await act(async () => {
+        render(<Game settings={{randomVerse:false}}/>);
+    });
+
+    const words = [/A/, /verse/, /from/, /the/, /bible/];
+    words.forEach((word, index) => {
+        const element = screen.getByText(word);
+        const event = {}
+        event.dataTransfer = {
+            setData: (key, value) => event[key] = value,
+            getData: (key) => event[key]
+        }
+        fireEvent.dragStart(element, event)
+        const space = document.getElementsByClassName("Space")[index];
+        fireEvent.drop(space, event)
+        expect(!element.classList.contains("available"))
+    })
+
+    expect(screen.getByText("Book 1v2")).toBeVisible();
 })
 
 test('verse should be visible when words are clicked in order', async () => {
@@ -76,11 +98,26 @@ test('verse should not be visible until words are clicked in order', async () =>
     expect(screen.queryAllByText("Book 1v2").length).toBe(1)
 })
 
-test('state is maintained on page refresh', async () => {
-    let rerender;
+test('words are removed when a space is clicked on', async () => {
     await act(async () => {
-        const result = render(<Game settings={{randomVerse:false}}/>);
-        rerender = result.rerender
+        render(<Game settings={{randomVerse: false}} />);
+    })
+
+    const wordList = document.getElementsByClassName("WordList")[0];
+    const words = [/A/, /bible/, /verse/, /from/];
+    words.forEach(word => {
+        within(wordList).getByText(word).click();
+    })
+
+    const solution = document.getElementsByClassName("Solution")[0];
+    within(solution).getByText(/bible/).click()
+    expect(within(solution).queryAllByText(/bible/).length).toBe(0)
+    expect(within(wordList).getByText(/bible/).classList.contains("available"))
+})
+
+test('state is maintained on page refresh', async () => {
+    await act(async () => {
+        render(<Game settings={{randomVerse:false}}/>);
     });
     const wordList = document.getElementsByClassName("WordList")[0];
 
@@ -90,8 +127,9 @@ test('state is maintained on page refresh', async () => {
     })
 
     const html = document.documentElement.innerHTML;
+    cleanup()
     await act(async () => {
-        rerender(<Game settings={{randomVerse:false}}/>);
+        render(<Game settings={{randomVerse:false}}/>);
     });
     expect(document.documentElement.innerHTML).toBe(html)
 })

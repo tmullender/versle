@@ -15,10 +15,10 @@ function Menu(props) {
     return(
         <>
             <div className={"Menu"}>
-                <MdHelp className={"menuIcon help"} onClick={() => setShowHelp(true)}/>
+                <MdHelp title={"Help"} className={"menuIcon help"} onClick={() => setShowHelp(true)}/>
                 <h2 className={"title"}>Versle</h2>
-                <MdLeaderboard className={"menuIcon leaderboard"} onClick={() => setShowStatistics(true)}/>
-                <MdSettings className={"menuIcon settings"} onClick={() => setShowSettings(true)}/>
+                <MdLeaderboard title={"Statistics"} className={"menuIcon statistics"} onClick={() => setShowStatistics(true)}/>
+                <MdSettings title={"Settings"} className={"menuIcon settings"} onClick={() => setShowSettings(true)}/>
             </div>
             <Modal show={showHelp} onHide={() => setShowHelp(false)}>
                 <Modal.Header closeButton>
