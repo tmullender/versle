@@ -15,7 +15,7 @@ afterEach(() => {
 
 test('the words of the verse are rendered', async () => {
     await act(async () => {
-        render(<Game settings={{randomVerse:false}}/>);
+        render(<Game settings={{randomVerse:false}} onComplete={jest.fn()}/>);
     });
 
     await waitFor(() => {
@@ -29,7 +29,7 @@ test('the words of the verse are rendered', async () => {
 
 test('words are available until clicked', async () => {
     await act(async () => {
-        render(<Game settings={{randomVerse:false}}/>);
+        render(<Game settings={{randomVerse:false}} onComplete={jest.fn()}/>);
     });
 
     const words = [/A/, /verse/, /from/, /the/, /bible/];
@@ -43,7 +43,7 @@ test('words are available until clicked', async () => {
 
 test('words are available until dragged', async () => {
     await act(async () => {
-        render(<Game settings={{randomVerse:false}}/>);
+        render(<Game settings={{randomVerse:false}} onComplete={jest.fn()}/>);
     });
 
     const words = [/A/, /verse/, /from/, /the/, /bible/];
@@ -65,7 +65,7 @@ test('words are available until dragged', async () => {
 
 test('verse should be visible when words are clicked in order', async () => {
     await act(async () => {
-        render(<Game settings={{randomVerse:false}}/>);
+        render(<Game settings={{randomVerse:false}} onComplete={jest.fn()}/>);
     });
 
     const words = [/A/, /verse/, /from/, /the/, /bible/];
@@ -78,7 +78,7 @@ test('verse should be visible when words are clicked in order', async () => {
 
 test('verse should not be visible until words are clicked in order', async () => {
     await act(async () => {
-        render(<Game settings={{randomVerse:false}}/>);
+        render(<Game settings={{randomVerse:false}} onComplete={jest.fn()}/>);
     });
     const wordList = document.getElementsByClassName("WordList")[0];
 
@@ -100,7 +100,7 @@ test('verse should not be visible until words are clicked in order', async () =>
 
 test('words are removed when a space is clicked on', async () => {
     await act(async () => {
-        render(<Game settings={{randomVerse: false}} />);
+        render(<Game settings={{randomVerse: false}} onComplete={jest.fn()} />);
     })
 
     const wordList = document.getElementsByClassName("WordList")[0];
@@ -117,7 +117,7 @@ test('words are removed when a space is clicked on', async () => {
 
 test('state is maintained on page refresh', async () => {
     await act(async () => {
-        render(<Game settings={{randomVerse:false}}/>);
+        render(<Game settings={{randomVerse:false}} onComplete={jest.fn()}/>);
     });
     const wordList = document.getElementsByClassName("WordList")[0];
 

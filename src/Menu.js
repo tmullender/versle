@@ -2,6 +2,7 @@ import {MdHelp, MdLeaderboard, MdSettings} from "react-icons/md";
 import './Menu.css'
 import {Modal} from "react-bootstrap";
 import {useState} from "react";
+import Statistics from "./Statistics";
 
 function Menu(props) {
     const [showHelp, setShowHelp] = useState(false)
@@ -56,7 +57,7 @@ function Menu(props) {
                     <Modal.Title>Statistics</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <p>Coming Soon...</p>
+                    <Statistics statistics={props.statistics}/>
                 </Modal.Body>
             </Modal>
         </>

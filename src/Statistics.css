@@ -1,0 +1,27 @@
+.Statistics span {
+    padding: 0.5em;
+}
+
+div.numeric {
+    display: inline-flex;
+    flex-direction: column-reverse;
+    width: 25%;
+    text-align: center;
+}
+
+div.distribution {
+    width: 100%;
+}
+
+.distribution div {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
+}
+
+.distribution .value {
+    color: lightgray;
+    flex-grow: 1;
+}
+
+

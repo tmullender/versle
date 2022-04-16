@@ -57,6 +57,9 @@ function Game(props) {
             loadGame(game, available)
         } else {
             setHistory([]);
+            if (game.key && !game.complete) {
+                props.onNewGame()
+            }
         }
     }
 
@@ -70,7 +73,7 @@ function Game(props) {
             })
             .catch(err => {
                 console.log(err);
-                initialise(["There", "was", "a", "problem", "selecting", "a", "verse"], { bookname: "ABC" });
+                initialise(["There", "was", "a", "problem", "selecting", "a", "verse"], { bookname: "ABC", chapter: 0, verse: 0 });
             });
     }
 
@@ -113,6 +116,7 @@ function Game(props) {
             return true;
         } else if (complete) {
             saveHistory(updated, true)
+            props.onComplete(updated.length)
         }
         setWords({available, used, complete})
         return false;
