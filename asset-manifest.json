@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/versle/static/css/main.c01fc264.css",
-    "main.js": "/versle/static/js/main.444ece53.js",
+    "main.css": "/versle/static/css/main.87d4f2ab.css",
+    "main.js": "/versle/static/js/main.d963832d.js",
     "index.html": "/versle/index.html",
-    "main.c01fc264.css.map": "/versle/static/css/main.c01fc264.css.map",
-    "main.444ece53.js.map": "/versle/static/js/main.444ece53.js.map"
+    "main.87d4f2ab.css.map": "/versle/static/css/main.87d4f2ab.css.map",
+    "main.d963832d.js.map": "/versle/static/js/main.d963832d.js.map"
   },
   "entrypoints": [
-    "static/css/main.c01fc264.css",
-    "static/js/main.444ece53.js"
+    "static/css/main.87d4f2ab.css",
+    "static/js/main.d963832d.js"
   ]
 }
