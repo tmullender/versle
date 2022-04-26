@@ -35,10 +35,10 @@ function App() {
 
     function onGameComplete(count) {
         const distribution = statistics.distribution;
-        distribution[count - 1] = distribution[count - 1] + 1
+        distribution[count - 1] = (distribution[count - 1] || 0) + 1
         const currentStreak = statistics.currentStreak + 1;
         const updated = {...statistics,
-            distribution,
+            distribution: distribution.map(count => (count || 0)),
             played: statistics.played + 1,
             currentStreak,
             longestStreak: Math.max(currentStreak, statistics.longestStreak)
