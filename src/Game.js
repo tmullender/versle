@@ -108,9 +108,10 @@ function Game(props) {
         if (complete && used.some(word => !word.correct)) {
             saveHistory(updated, false)
             setHistory(updated)
+            const correctIndexes = used.filter(word => word.correct).map(word => word.index);
             setWords({
-                available: available.map(word => {word.available = true; return word}),
-                used: available.map((word, position) => { return {position} }),
+                available: available.map(word => {word.available = !correctIndexes.includes(word.index); return word}),
+                used: used.map((word, position) => { return word.correct ? word : {position} }),
                 complete: false
             })
             return true;

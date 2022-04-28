@@ -87,12 +87,15 @@ test('verse should not be visible until words are clicked in order', async () =>
         within(wordList).getByText(word).click();
         expect(screen.queryAllByText("Book 1v2").length).toBe(0)
     })
+    expect(document.getElementsByClassName("available").length).toBe(4);
 
     const secondAttempt = [/A/, /verse/, /from/, /the/, /bible/];
     secondAttempt.forEach(word => {
         expect(screen.queryAllByText("Book 1v2").length).toBe(0)
         within(wordList).getByText(word).click();
     })
+
+    expect(document.getElementsByClassName("available").length).toBe(0);
     expect(document.getElementsByClassName("incorrect").length).toBe(4);
     expect(document.getElementsByClassName("correct").length).toBe(6);
     expect(screen.queryAllByText("Book 1v2").length).toBe(1)
