@@ -22,6 +22,7 @@ div.distribution {
 .distribution .value {
     color: lightgray;
     flex-grow: 1;
+    margin: 1px;
 }
 
 
