@@ -7,7 +7,7 @@ const statistics = {played: 2, distribution: [1, 2], currentStreak: 0, longestSt
 test('the menu should be rendered', async () => {
     const updateSettings = jest.fn()
     await act(async () => {
-        render(<Menu settings={{randomVerse:false}} update={updateSettings} statistics={statistics}/>);
+        render(<Menu settings={{randomVerse:false}} update={updateSettings} statistics={statistics} hideStatistics={()=>{}} />);
     });
     expect(document.getElementsByClassName("menuIcon").length).toBe(3);
 });
@@ -15,7 +15,7 @@ test('the menu should be rendered', async () => {
 test('the help text should be visible when help is clicked', async () => {
     const updateSettings = jest.fn()
     await act(async () => {
-        render(<Menu settings={{randomVerse:false}} update={updateSettings} statistics={statistics}/>);
+        render(<Menu settings={{randomVerse:false}} update={updateSettings} statistics={statistics} hideStatistics={()=>{}} />);
     });
     expect(screen.queryAllByText(/The words from a verse in the Bible/)).toHaveLength(0)
     fireEvent.click(screen.getByTitle("Help"))
@@ -29,7 +29,7 @@ test('the help text should be visible when help is clicked', async () => {
 test('the statistics should be visible when statistics is clicked', async () => {
     const updateSettings = jest.fn()
     await act(async () => {
-        render(<Menu settings={{randomVerse:true}} update={updateSettings} statistics={statistics}/>);
+        render(<Menu settings={{randomVerse:true}} update={updateSettings} statistics={statistics} hideStatistics={()=>{}} />);
     });
     expect(screen.queryAllByText(/Played/)).toHaveLength(0)
     fireEvent.click(screen.getByTitle("Statistics"))
@@ -43,7 +43,7 @@ test('the statistics should be visible when statistics is clicked', async () => 
 test('the settings should be visible when settings is clicked', async () => {
     const updateSettings = jest.fn()
     await act(async () => {
-        render(<Menu settings={{randomVerse:false}} update={updateSettings} statistics={statistics}/>);
+        render(<Menu settings={{randomVerse:false}} update={updateSettings} statistics={statistics} hideStatistics={()=>{}} />);
     });
     expect(screen.queryAllByText(/Using Verse of the Day/)).toHaveLength(0)
     fireEvent.click(screen.getByTitle("Settings"))

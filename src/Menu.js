@@ -13,6 +13,11 @@ function Menu(props) {
         <label htmlFor={"random"}>Using a random verse (untick to use the Verse of the Day)</label> :
         <label htmlFor={"random"}>Using Verse of the Day (tick to use a random verse)</label>
 
+    const hideStatistics = () => {
+        setShowStatistics(false);
+        props.hideStatistics()
+    }
+
     return(
         <>
             <div className={"Menu"}>
@@ -52,7 +57,7 @@ function Menu(props) {
                     </div>
                 </Modal.Body>
             </Modal>
-            <Modal show={showStatistics} onHide={() => setShowStatistics(false)}>
+            <Modal show={showStatistics || props.statistics.visible} onHide={hideStatistics}>
                 <Modal.Header closeButton>
                     <Modal.Title>Statistics</Modal.Title>
                 </Modal.Header>

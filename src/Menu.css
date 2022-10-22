@@ -8,6 +8,7 @@
     justify-content: center;
     margin: 0 auto;
     padding-bottom: 3px;
+    padding-top: 3px;
     text-align: center;
     width: 90vw;
 }
@@ -20,6 +21,7 @@
 .title {
     flex-grow: 100;
     padding-left: 1.2em;
+    margin: 0.5rem;
 }
 
 .setting {

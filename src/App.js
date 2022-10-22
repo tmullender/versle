@@ -44,18 +44,22 @@ function App() {
             longestStreak: Math.max(currentStreak, statistics.longestStreak)
         };
         localStorage.setItem("statistics", JSON.stringify(updated))
-        setStatistics(updated)
+        setStatistics({...updated, visible: true})
     }
 
     function onGameStarted() {
-        const updated = { ...statistics, played: statistics.played + 1, currentStreak: 0 };
+        const updated = { ...statistics, played: statistics.played + 1, currentStreak: 0, visible: false };
         localStorage.setItem("statistics", JSON.stringify(updated))
         setStatistics(updated)
     }
 
+    function hideStatistics() {
+        setStatistics({...statistics, visible: false})
+    }
+
     return (
         <div className={"App"} >
-            <Menu settings={settings} update={updateSettings} statistics={statistics}/>
+            <Menu settings={settings} update={updateSettings} statistics={statistics} hideStatistics={hideStatistics}/>
             <Game settings={settings} onComplete={onGameComplete} onNewGame={onGameStarted}/>
             <div className={"footer"}>
                 <div>The Scriptures quoted are from the NET Bible®
